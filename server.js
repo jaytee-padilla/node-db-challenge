@@ -18,6 +18,9 @@ server.get('/', (req, res) => {
 server.get('/projects', async (req, res) => {
 	try {
 		const projects = await db('projects');
+
+		!projects.project_completed ? projects.project_completed = "false" : projects.project_completed = "true";
+
 		res.status(200).json(projects);
 	}
 	catch(error) {
@@ -40,7 +43,9 @@ server.get('/resources', async (req, res) => {
 // get all tasks
 server.get('/tasks', async (req, res) => {
 	try {
-		const tasks = await db('tasks');
+		const tasks = await db('tasks')
+			.join('projects', 'projects.project_id', 'tasks.project_id')
+			.select('tasks.task_description', 'tasks.task_notes', 'tasks.task_completed', 'tasks.project_id', 'projects.project_name', 'projects.project_description')
 
 		res.status(200).json(tasks);
 	}
