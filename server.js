@@ -37,6 +37,18 @@ server.get('/resources', async (req, res) => {
 	}
 });
 
+// get all tasks
+server.get('/tasks', async (req, res) => {
+	try {
+		const tasks = await db('tasks');
+
+		res.status(200).json(tasks);
+	}
+	catch(error) {
+		res.status(500).json({message: 'There was an error retrieving the tasks from database'});
+	}
+});
+
 
 // POST
 // add a project
@@ -66,6 +78,21 @@ server.post('/resources', async (req, res) => {
 	}
 	catch(error) {
 		res.status(500).json({message: 'Error adding resource to database'})
+	}
+});
+
+//add a task
+server.post('/tasks', async (req, res) => {
+	const taskData = req.body;
+
+	try{
+		const [id] = await db('tasks').insert(taskData);
+		const task = await db('tasks').where('task_id', id).first();
+
+		res.status(201).json(task);
+	}
+	catch(error) {
+		res.status(500).json({message: 'Error adding task to database'});
 	}
 });
 

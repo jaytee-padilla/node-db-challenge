@@ -44,7 +44,6 @@ exports.up = function(knex) {
 				.integer('project_id')
 				.unsigned()
 				.notNullable()
-				.unique()
 				.references('project_id')
 				.inTable('projects')
 				.onDelete('CASCADE')
