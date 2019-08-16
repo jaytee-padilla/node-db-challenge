@@ -27,5 +27,19 @@ server.get('/projects', async (req, res) => {
 
 
 // POST
+// add a project
+server.post('/projects', async (req, res) => {
+	const projectData = req.body;
+
+	try {
+		const [id] = await db('projects').insert(projectData);
+		const project = await db('projects').where('project_id', id);
+
+		res.status(201).json(project);
+	}
+	catch(error) {
+		res.status(500).json({message: 'Error adding post to database'});
+	}
+});
 
 module.exports = server;

@@ -12,7 +12,7 @@ exports.up = function(knex) {
 			tbl
 				.string('project_description', 255)
 			tbl
-				.boolean('project_completed').notNullable().defaultTo(false)
+				.boolean('project_completed').defaultTo(false)
 		})
 
 	// ONE project can have MANY resources
