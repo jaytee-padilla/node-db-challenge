@@ -18,8 +18,10 @@ server.get('/', (req, res) => {
 server.get('/projects', async (req, res) => {
 	try {
 		const projects = await db('projects');
-
-		!projects.project_completed ? projects.project_completed = "false" : projects.project_completed = "true";
+		
+		projects.forEach(project => {
+			!project.project_completed ? project.project_completed = "false" : project.project_completed = "true";
+		});
 
 		res.status(200).json(projects);
 	}
@@ -45,7 +47,11 @@ server.get('/tasks', async (req, res) => {
 	try {
 		const tasks = await db('tasks')
 			.join('projects', 'projects.project_id', 'tasks.project_id')
-			.select('tasks.task_description', 'tasks.task_notes', 'tasks.task_completed', 'tasks.project_id', 'projects.project_name', 'projects.project_description')
+			.select('tasks.task_id', 'tasks.task_description', 'tasks.task_notes', 'tasks.task_completed', 'tasks.project_id', 'projects.project_name', 'projects.project_description')
+
+			tasks.forEach(task => {
+				!task.task_completed ? task.task_completed = "false" : task.task_completed = "true";
+			});
 
 		res.status(200).json(tasks);
 	}
@@ -100,5 +106,11 @@ server.post('/tasks', async (req, res) => {
 		res.status(500).json({message: 'Error adding task to database'});
 	}
 });
+
+// function convertToBool(arr) {
+// 	projects.forEach(project => {
+// 		!project.project_completed ? project.project_completed = "false" : project.project_completed = "true";
+// 	});
+// }
 
 module.exports = server;
